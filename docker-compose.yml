@@ -1,0 +1,57 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: universal-booking-system_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+      - "5173:5173"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - universal-booking-system_net
+
+  db:
+    image: mysql:8.0
+    container_name: universal-booking-system_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: universal_booking_system
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - universal-booking-system_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - universal-booking-system_net
+
+  redis:
+    image: redis:alpine
+    container_name: universal-booking-system_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - universal-booking-system_net
+
+volumes:
+  universal-booking-system_db_data:
+
+networks:
+  universal-booking-system_net:
+    driver: bridge
