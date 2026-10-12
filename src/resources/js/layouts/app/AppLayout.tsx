@@ -82,9 +82,9 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                                 </div>
                                 {!isCollapsed && (
                                     <div className="min-w-0">
-                                        <ShinyText text="Slotwise" speed={4} className="text-sm font-semibold tracking-tight block truncate" />
+                                        <ShinyText text="Universal Booking" speed={4} className="text-sm font-semibold tracking-tight block truncate" />
                                         <span className="text-[11px] text-zinc-500 dark:text-zinc-400 block truncate">
-                                            Booking System
+                                            Appointment Platform
                                         </span>
                                     </div>
                                 )}
@@ -154,7 +154,7 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                             {!isCollapsed && (
                                 <span className="text-[11px] font-mono tracking-tight text-zinc-500 dark:text-zinc-400 truncate">
-                                    Slotwise Core
+                                    Core System
                                 </span>
                             )}
                         </div>
@@ -187,7 +187,7 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                     {/* Clean Footer */}
                     <footer className="border-t border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 px-6 sm:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500 dark:text-zinc-400 shrink-0 transition-colors">
                         <div>
-                            <span>Slotwise</span>
+                            <span>Universal Booking</span>
                         </div>
                         <div>
                             <span>Appointment & Scheduling Platform</span>

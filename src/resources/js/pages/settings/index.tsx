@@ -59,7 +59,7 @@ export default function SettingsIndex() {
 
     return (
         <AppLayout title="Account Settings">
-            <Head title="Account Settings — Slotwise" />
+            <Head title="Account Settings" />
 
             <div className="max-w-5xl mx-auto space-y-8">
                 {/* Header Welcome Rail */}

@@ -26,14 +26,14 @@ export default function Login({ status }: Props) {
 
     return (
         <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center px-4 py-12 text-zinc-100 selection:bg-emerald-500 selection:text-white">
-            <Head title="Sign In — Slotwise" />
+            <Head title="Sign In" />
 
             <div className="w-full max-w-md space-y-6">
                 <div className="flex flex-col items-center text-center space-y-2">
                     <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-inner">
                         <CalendarCheck className="w-6 h-6 text-emerald-400" />
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white">Slotwise Command Center</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-white">Universal Booking System</h1>
                     <p className="text-sm text-zinc-400">Sign in to manage schedules, appointments, and client records.</p>
                 </div>
 

@@ -130,7 +130,7 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
 
     return (
         <AppLayout title="Access Control">
-            <Head title="Access Control — Slotwise" />
+            <Head title="Access Control" />
 
             <div className="space-y-8 max-w-7xl mx-auto">
                 {/* Header Banner */}

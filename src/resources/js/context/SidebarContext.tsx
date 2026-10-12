@@ -8,7 +8,7 @@ interface SidebarContextType {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-const SIDEBAR_STORAGE_KEY = 'slotwise_sidebar_collapsed';
+const SIDEBAR_STORAGE_KEY = 'app_sidebar_collapsed';
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {

@@ -121,7 +121,7 @@ export default function LocationIndex({ locations }: Props) {
 
     return (
         <AppLayout title="Location & Branch Management">
-            <Head title="Locations — Slotwise" />
+            <Head title="Locations" />
 
             <div className="space-y-8 max-w-7xl mx-auto">
                 {/* Header Bar */}

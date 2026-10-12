@@ -87,7 +87,7 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
 
     return (
         <AppLayout title="Dashboard">
-            <Head title="Dashboard — Slotwise" />
+            <Head title="Dashboard" />
 
             <div className="space-y-8 max-w-7xl mx-auto">
                 {/* Header Welcome Bar */}

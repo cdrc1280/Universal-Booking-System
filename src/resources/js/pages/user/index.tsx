@@ -135,7 +135,7 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
 
     return (
         <AppLayout title="Staff Directory">
-            <Head title="Staff Directory — Slotwise" />
+            <Head title="Staff Directory" />
 
             <div className="space-y-6 max-w-7xl mx-auto">
                 {/* Header Banner */}

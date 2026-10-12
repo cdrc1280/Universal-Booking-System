@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title inertia>{{ config('app.name', 'Slotwise Booking System') }}</title>
+    <title inertia>{{ config('app.name', 'Universal Booking System') }}</title>
     <script>
         (function() {
             try {
-                const saved = localStorage.getItem('slotwise_theme_preference');
+                const saved = localStorage.getItem('app_theme_preference');
                 const isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 if (isDark) {
                     document.documentElement.classList.add('dark');
