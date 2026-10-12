@@ -13,6 +13,7 @@ import { useSidebar, SidebarProvider } from '@/context/SidebarContext';
 import { useTheme, ThemeProvider } from '@/context/ThemeContext';
 import { ThemeToggle } from '@/components/custom/ThemeToggle';
 import { Button } from '@/components/ui/button';
+import { ShinyText, Magnetic } from '@/components/reactbits';
 
 interface NavItem {
     label: string;
@@ -80,9 +81,7 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                                 </div>
                                 {!isCollapsed && (
                                     <div className="min-w-0">
-                                        <span className="font-semibold text-zinc-900 dark:text-white tracking-tight text-sm block truncate">
-                                            Slotwise
-                                        </span>
+                                        <ShinyText text="Slotwise" speed={4} className="text-sm font-semibold tracking-tight block truncate" />
                                         <span className="text-[11px] text-zinc-500 dark:text-zinc-400 block truncate">
                                             Booking System
                                         </span>
@@ -185,7 +184,9 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <ThemeToggle />
+                            <Magnetic intensity={0.25}>
+                                <ThemeToggle />
+                            </Magnetic>
                         </div>
                     </header>
 

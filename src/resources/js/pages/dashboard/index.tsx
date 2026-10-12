@@ -4,6 +4,7 @@ import AppLayout from '@/layouts/app/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { SpotlightCard, BlurText, GridPattern } from '@/components/reactbits';
 import {
     Calendar,
     Users,
@@ -93,8 +94,8 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2.5">
-                            <Activity className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                            Overview
+                            <Activity className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                            <BlurText text="Overview" className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white" />
                         </h1>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
                             System activity, schedule utilization, and active appointments.
@@ -107,24 +108,25 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
                     {stats.map((stat, i) => {
                         const Icon = stat.icon;
                         return (
-                            <Card key={i} className="border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/50 hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-colors">
-                                <CardContent className="p-5 space-y-3">
-                                    <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
-                                        <span className="text-xs font-medium uppercase tracking-wider">{stat.label}</span>
-                                        <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 flex items-center justify-center text-zinc-700 dark:text-zinc-300">
-                                            <Icon className="w-4 h-4" />
-                                        </div>
+                            <SpotlightCard
+                                key={i}
+                                className="p-5 space-y-3 hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-colors"
+                            >
+                                <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
+                                    <span className="text-xs font-medium uppercase tracking-wider">{stat.label}</span>
+                                    <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 flex items-center justify-center text-zinc-700 dark:text-zinc-300">
+                                        <Icon className="w-4 h-4" />
                                     </div>
-                                    <div>
-                                        <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white font-mono block">
-                                            {stat.value}
-                                        </span>
-                                        <div className="text-[11px] text-zinc-500 mt-1">
-                                            <span>{stat.subtext}</span>
-                                        </div>
+                                </div>
+                                <div>
+                                    <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white font-mono block">
+                                        {stat.value}
+                                    </span>
+                                    <div className="text-[11px] text-zinc-500 mt-1">
+                                        <span>{stat.subtext}</span>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </SpotlightCard>
                         );
                     })}
                 </div>
@@ -167,11 +169,12 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="p-12 text-center space-y-3">
-                                    <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500">
+                                <div className="relative overflow-hidden p-12 text-center space-y-3">
+                                    <GridPattern className="opacity-35 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)]" />
+                                    <div className="relative z-10 w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500">
                                         <Inbox className="w-5 h-5" />
                                     </div>
-                                    <div className="space-y-1">
+                                    <div className="relative z-10 space-y-1">
                                         <h3 className="text-sm font-medium text-zinc-800 dark:text-zinc-300">No appointments recorded</h3>
                                         <p className="text-xs text-zinc-500 max-w-sm mx-auto">
                                             New customer bookings will appear here.
