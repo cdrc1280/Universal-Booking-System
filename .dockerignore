@@ -1,8 +1,10 @@
 .git
-.env
-vendor
-node_modules
-storage/logs/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
+**/vendor
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+src/storage/logs/*
+src/storage/framework/cache/*
+src/storage/framework/sessions/*
+src/storage/framework/views/*
