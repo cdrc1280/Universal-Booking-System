@@ -7,7 +7,6 @@ import {
     Plus,
     Edit2,
     Trash2,
-    X,
     Check,
     Users,
     Lock,
@@ -18,6 +17,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from '@/components/ui/sheet';
 
 interface PermissionItem {
     id: number;
@@ -39,7 +46,7 @@ interface Props {
 }
 
 export default function RoleIndex({ roles, permissions = [] }: Props) {
-    const [modalOpen, setModalOpen] = useState(false);
+    const [sheetOpen, setSheetOpen] = useState(false);
     const [editingRole, setEditingRole] = useState<RoleItem | null>(null);
 
     const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
@@ -47,7 +54,7 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
         permissions: [] as string[],
     });
 
-    const openCreateModal = () => {
+    const openCreate = () => {
         setEditingRole(null);
         reset();
         clearErrors();
@@ -55,21 +62,21 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
             name: '',
             permissions: [],
         });
-        setModalOpen(true);
+        setSheetOpen(true);
     };
 
-    const openEditModal = (role: RoleItem) => {
+    const openEdit = (role: RoleItem) => {
         setEditingRole(role);
         clearErrors();
         setData({
             name: role.name,
             permissions: role.permissions?.map((p) => p.name) ?? [],
         });
-        setModalOpen(true);
+        setSheetOpen(true);
     };
 
-    const closeModal = () => {
-        setModalOpen(false);
+    const closeSheet = () => {
+        setSheetOpen(false);
         setEditingRole(null);
         reset();
         clearErrors();
@@ -96,11 +103,11 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
 
         if (editingRole) {
             put(`/roles/${editingRole.id}`, {
-                onSuccess: () => closeModal(),
+                onSuccess: () => closeSheet(),
             });
         } else {
             post('/roles', {
-                onSuccess: () => closeModal(),
+                onSuccess: () => closeSheet(),
             });
         }
     };
@@ -147,7 +154,7 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
                             Defined Roles: <span className="text-zinc-900 dark:text-zinc-200 font-semibold">{roles.length}</span>
                         </div>
                         <Button
-                            onClick={openCreateModal}
+                            onClick={openCreate}
                             className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium gap-1.5 shadow-xs"
                         >
                             <Plus className="w-4 h-4" />
@@ -221,7 +228,7 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => openEditModal(role)}
+                                            onClick={() => openEdit(role)}
                                             className="h-8 px-2.5 text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white gap-1"
                                         >
                                             <Edit2 className="w-3.5 h-3.5" />
@@ -246,41 +253,37 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
                     })}
                 </div>
 
-                {/* Role Modal Dialog */}
-                {modalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-6">
-                            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-4">
+                {/* shadcn Sheet Slide-Over Form */}
+                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                    <SheetContent side="right" className="sm:max-w-lg flex flex-col justify-between">
+                        <div>
+                            <SheetHeader>
                                 <div className="flex items-center gap-2.5">
-                                    <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                                         <ShieldCheck className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h2 className="text-base font-semibold text-zinc-900 dark:text-white">
+                                        <SheetTitle>
                                             {editingRole ? 'Edit Security Role' : 'Create New Role'}
-                                        </h2>
-                                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                            {editingRole ? 'Modify role name and permission boundaries' : 'Define an authorization role with explicit capabilities'}
-                                        </p>
+                                        </SheetTitle>
+                                        <SheetDescription>
+                                            {editingRole
+                                                ? 'Modify role configuration and assigned permission limits'
+                                                : 'Define a custom authorization role with granular capabilities'}
+                                        </SheetDescription>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={closeModal}
-                                    className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
+                            </SheetHeader>
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form id="role-form" onSubmit={handleSubmit} className="space-y-5 py-6">
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="role-name" className="text-xs font-medium">Role Name</Label>
+                                    <Label htmlFor="role-name" className="text-xs font-medium">Role Identifier Name</Label>
                                     <Input
                                         id="role-name"
                                         type="text"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="e.g. supervisor, support, receptionist"
+                                        placeholder="e.g. manager, receptionist, specialist"
                                         className="text-xs h-9"
                                         required
                                     />
@@ -306,7 +309,7 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
                                             No system permissions defined in the database.
                                         </p>
                                     ) : (
-                                        <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto p-1 border border-zinc-100 dark:border-zinc-800 rounded-xl bg-zinc-50/50 dark:bg-zinc-950/30">
+                                        <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto p-1.5 border border-zinc-100 dark:border-zinc-800 rounded-xl bg-zinc-50/50 dark:bg-zinc-950/30">
                                             {permissions.map((perm) => {
                                                 const isSelected = data.permissions.includes(perm.name);
                                                 return (
@@ -335,28 +338,29 @@ export default function RoleIndex({ roles, permissions = [] }: Props) {
                                     )}
                                     {errors.permissions && <p className="text-[11px] text-rose-500">{errors.permissions}</p>}
                                 </div>
-
-                                <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={closeModal}
-                                        className="text-xs h-9"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 shadow-xs"
-                                    >
-                                        {processing ? 'Saving...' : editingRole ? 'Update Role' : 'Create Role'}
-                                    </Button>
-                                </div>
                             </form>
                         </div>
-                    </div>
-                )}
+
+                        <SheetFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={closeSheet}
+                                className="text-xs h-9"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                form="role-form"
+                                type="submit"
+                                disabled={processing}
+                                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 shadow-xs"
+                            >
+                                {processing ? 'Saving...' : editingRole ? 'Update Role' : 'Create Role'}
+                            </Button>
+                        </SheetFooter>
+                    </SheetContent>
+                </Sheet>
             </div>
         </AppLayout>
     );

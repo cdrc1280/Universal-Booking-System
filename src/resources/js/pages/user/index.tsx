@@ -9,17 +9,23 @@ import {
     Plus,
     Edit2,
     Trash2,
-    X,
     Check,
     Lock,
     Mail,
-    AlertCircle,
     UserCheck,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from '@/components/ui/sheet';
 
 interface UserData {
     id: number;
@@ -46,7 +52,7 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
     const [search, setSearch] = useState(filters.search || '');
     const [, startTransition] = useTransition();
 
-    const [modalOpen, setModalOpen] = useState(false);
+    const [sheetOpen, setSheetOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
 
     const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
@@ -67,7 +73,7 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
         });
     };
 
-    const openCreateModal = () => {
+    const openCreate = () => {
         setEditingUser(null);
         reset();
         clearErrors();
@@ -77,10 +83,10 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
             password: '',
             roles: available_roles.length > 0 ? [available_roles[0]] : [],
         });
-        setModalOpen(true);
+        setSheetOpen(true);
     };
 
-    const openEditModal = (user: UserData) => {
+    const openEdit = (user: UserData) => {
         setEditingUser(user);
         clearErrors();
         setData({
@@ -89,11 +95,11 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
             password: '',
             roles: [...user.roles],
         });
-        setModalOpen(true);
+        setSheetOpen(true);
     };
 
-    const closeModal = () => {
-        setModalOpen(false);
+    const closeSheet = () => {
+        setSheetOpen(false);
         setEditingUser(null);
         reset();
         clearErrors();
@@ -112,11 +118,11 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
 
         if (editingUser) {
             put(`/users/${editingUser.id}`, {
-                onSuccess: () => closeModal(),
+                onSuccess: () => closeSheet(),
             });
         } else {
             post('/users', {
-                onSuccess: () => closeModal(),
+                onSuccess: () => closeSheet(),
             });
         }
     };
@@ -151,7 +157,7 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
                             Total Accounts: <span className="text-zinc-900 dark:text-zinc-200 font-semibold">{users.total}</span>
                         </div>
                         <Button
-                            onClick={openCreateModal}
+                            onClick={openCreate}
                             className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium gap-1.5 shadow-xs"
                         >
                             <Plus className="w-4 h-4" />
@@ -236,7 +242,7 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    onClick={() => openEditModal(user)}
+                                                    onClick={() => openEdit(user)}
                                                     className="h-8 w-8 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                                                     title="Edit account"
                                                 >
@@ -260,33 +266,29 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
                     </table>
                 </div>
 
-                {/* User Upsert Modal Dialog */}
-                {modalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-6">
-                            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-4">
+                {/* shadcn Sheet Slide-Over Form */}
+                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                    <SheetContent side="right" className="sm:max-w-lg flex flex-col justify-between">
+                        <div>
+                            <SheetHeader>
                                 <div className="flex items-center gap-2.5">
-                                    <div className="p-2 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                                    <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                                         <UserCheck className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h2 className="text-base font-semibold text-zinc-900 dark:text-white">
+                                        <SheetTitle>
                                             {editingUser ? 'Edit User Account' : 'Create User Account'}
-                                        </h2>
-                                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                            {editingUser ? 'Update user credentials and permission roles' : 'Add a new team member or system administrator'}
-                                        </p>
+                                        </SheetTitle>
+                                        <SheetDescription>
+                                            {editingUser
+                                                ? 'Update user credentials and permission boundaries'
+                                                : 'Register a new team member or system administrator'}
+                                        </SheetDescription>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={closeModal}
-                                    className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
+                            </SheetHeader>
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form id="user-form" onSubmit={handleSubmit} className="space-y-5 py-6">
                                 <div className="space-y-1.5">
                                     <Label htmlFor="name" className="text-xs font-medium">Full Name</Label>
                                     <Input
@@ -365,28 +367,29 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
                                     </div>
                                     {errors.roles && <p className="text-[11px] text-rose-500">{errors.roles}</p>}
                                 </div>
-
-                                <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={closeModal}
-                                        className="text-xs h-9"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 shadow-xs"
-                                    >
-                                        {processing ? 'Saving...' : editingUser ? 'Update User' : 'Create User'}
-                                    </Button>
-                                </div>
                             </form>
                         </div>
-                    </div>
-                )}
+
+                        <SheetFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={closeSheet}
+                                className="text-xs h-9"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                form="user-form"
+                                type="submit"
+                                disabled={processing}
+                                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 shadow-xs"
+                            >
+                                {processing ? 'Saving...' : editingUser ? 'Update User' : 'Create User'}
+                            </Button>
+                        </SheetFooter>
+                    </SheetContent>
+                </Sheet>
             </div>
         </AppLayout>
     );
