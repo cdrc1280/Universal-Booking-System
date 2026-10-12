@@ -10,55 +10,57 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/* Design Tokens supporting Light and Dark modes */
+/* Design Tokens supporting Light (Warm Off-White) and Dark (Google Dark #202124) modes */
 :root {
-    --background: #ffffff;
-    --foreground: #09090b;
+    --background: #f8f9fa;
+    --foreground: #202124;
     --card: #ffffff;
-    --card-foreground: #09090b;
+    --card-foreground: #202124;
     --popover: #ffffff;
-    --popover-foreground: #09090b;
+    --popover-foreground: #202124;
     --primary: #10b981;
     --primary-foreground: #ffffff;
-    --secondary: #f4f4f5;
-    --secondary-foreground: #18181b;
-    --muted: #f4f4f5;
-    --muted-foreground: #71717a;
-    --accent: #f4f4f5;
-    --accent-foreground: #18181b;
-    --destructive: #ef4444;
-    --destructive-foreground: #fafafa;
-    --border: #e4e4e7;
-    --input: #e4e4e7;
+    --secondary: #f1f3f4;
+    --secondary-foreground: #3c4043;
+    --muted: #f1f3f4;
+    --muted-foreground: #5f6368;
+    --accent: #e8eaed;
+    --accent-foreground: #202124;
+    --destructive: #d93025;
+    --destructive-foreground: #ffffff;
+    --border: #dadce0;
+    --input: #dadce0;
     --ring: #10b981;
     --radius: 0.5rem;
 }
 
 .dark {
-    --background: #09090b;
-    --foreground: #fafafa;
-    --card: #121215;
-    --card-foreground: #fafafa;
-    --popover: #121215;
-    --popover-foreground: #fafafa;
+    --background: #202124;
+    --foreground: #e8eaed;
+    --card: #303134;
+    --card-foreground: #e8eaed;
+    --popover: #303134;
+    --popover-foreground: #e8eaed;
     --primary: #10b981;
-    --primary-foreground: #09090b;
-    --secondary: #27272a;
-    --secondary-foreground: #fafafa;
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
-    --accent: #27272a;
-    --accent-foreground: #fafafa;
-    --destructive: #7f1d1d;
-    --destructive-foreground: #fafafa;
-    --border: #27272a;
-    --input: #27272a;
+    --primary-foreground: #202124;
+    --secondary: #3c4043;
+    --secondary-foreground: #e8eaed;
+    --muted: #3c4043;
+    --muted-foreground: #9aa0a6;
+    --accent: #3c4043;
+    --accent-foreground: #ffffff;
+    --destructive: #f28b82;
+    --destructive-foreground: #202124;
+    --border: #3c4043;
+    --input: #3c4043;
     --ring: #10b981;
 }
 
+html,
 body {
-    min-height: 100vh;
     height: 100%;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
 @keyframes shine {

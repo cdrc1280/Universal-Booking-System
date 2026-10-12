@@ -23,7 +23,7 @@ final class UserController extends Controller
     {
         $paginator = $query->execute([
             'search' => $request->string('search')->toString() ?: null,
-            'per_page' => $request->integer('per_page', 15),
+            'per_page' => $request->integer('per_page', 20),
         ]);
 
         $availableRoles = Role::query()->orderBy('name')->pluck('name');

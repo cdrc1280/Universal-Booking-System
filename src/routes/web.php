@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -39,6 +41,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings', function () {
         return Inertia::render('settings/index');
     })->name('settings');
+
+    // PSGC Geographic Proxy Routes
+    Route::prefix('psgc')->name('psgc.')->group(function () {
+        Route::get('/regions', [\App\Domains\Location\Controllers\PsgcProxyController::class, 'regions'])->name('regions');
+        Route::get('/regions/{regionCode}/provinces', [\App\Domains\Location\Controllers\PsgcProxyController::class, 'provinces'])->name('provinces');
+        Route::get('/cities-municipalities', [\App\Domains\Location\Controllers\PsgcProxyController::class, 'citiesMunicipalities'])->name('cities-municipalities');
+        Route::get('/cities-municipalities/{code}/barangays', [\App\Domains\Location\Controllers\PsgcProxyController::class, 'barangays'])->name('barangays');
+    });
 
     // Fully implemented active domain modules
     Route::resource('locations', LocationController::class)->except(['create', 'show', 'edit']);

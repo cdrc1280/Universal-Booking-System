@@ -24,7 +24,7 @@ class UserIndexQuery
                 });
             })
             ->latest('id')
-            ->paginate($filters['per_page'] ?? 15)
+            ->paginate($filters['per_page'] ?? 20)
             ->withQueryString();
     }
 }

@@ -89,7 +89,7 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
         <AppLayout title="Dashboard">
             <Head title="Dashboard" />
 
-            <div className="space-y-8 max-w-7xl mx-auto">
+            <div className="space-y-8 w-full">
                 {/* Header Welcome Bar */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
                     <div>
@@ -134,33 +134,33 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
                 {/* Primary Content Split: Appointments Feed & Quick Links */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Real Bookings Feed (2 cols) */}
-                    <Card className="lg:col-span-2 border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/50">
-                        <CardHeader className="flex flex-row items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
+                    <Card className="lg:col-span-2 border-[#dadce0] dark:border-[#3c4043] bg-white dark:bg-[#303134]">
+                        <CardHeader className="flex flex-row items-center justify-between border-b border-[#dadce0] dark:border-[#3c4043] pb-4">
                             <div>
-                                <CardTitle className="text-base font-semibold text-zinc-900 dark:text-white">Recent Appointments</CardTitle>
-                                <CardDescription className="text-xs mt-0.5 text-zinc-500 dark:text-zinc-400">
+                                <CardTitle className="text-base font-semibold text-[#202124] dark:text-[#ffffff]">Recent Appointments</CardTitle>
+                                <CardDescription className="text-xs mt-0.5 text-[#5f6368] dark:text-[#9aa0a6]">
                                     Appointments booked across all locations.
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-0">
                             {recent_bookings.length > 0 ? (
-                                <div className="divide-y divide-zinc-200 dark:divide-zinc-800/60">
+                                <div className="divide-y divide-[#dadce0] dark:divide-[#3c4043]">
                                     {recent_bookings.map((b) => (
-                                        <div key={b.id} className="p-4 sm:px-6 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800/20 transition-colors">
+                                        <div key={b.id} className="p-4 sm:px-6 flex items-center justify-between hover:bg-[#f1f3f4] dark:hover:bg-[#3c4043]/40 transition-colors">
                                             <div className="space-y-1 min-w-0 pr-4">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-zinc-900 dark:text-white text-sm truncate">{b.customer_name}</span>
-                                                    <span className="text-[11px] font-mono text-zinc-500 bg-zinc-100 dark:bg-zinc-800/60 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700/40">
+                                                    <span className="font-medium text-[#202124] dark:text-[#ffffff] text-sm truncate">{b.customer_name}</span>
+                                                    <span className="text-[11px] font-mono text-[#5f6368] bg-[#f1f3f4] dark:bg-[#202124] px-1.5 py-0.5 rounded border border-[#dadce0] dark:border-[#3c4043]">
                                                         {b.reference}
                                                     </span>
                                                 </div>
-                                                <p className="text-xs text-zinc-600 dark:text-zinc-400 truncate">{b.service_name}</p>
-                                                <p className="text-[11px] text-zinc-500 font-mono">{b.time_window}</p>
+                                                <p className="text-xs text-[#5f6368] dark:text-[#9aa0a6] truncate">{b.service_name}</p>
+                                                <p className="text-[11px] text-[#5f6368] dark:text-[#9aa0a6] font-mono">{b.time_window}</p>
                                             </div>
 
                                             <div className="flex flex-col items-end gap-1.5 shrink-0">
-                                                <span className="font-mono text-sm font-semibold text-zinc-900 dark:text-white">
+                                                <span className="font-mono text-sm font-semibold text-[#202124] dark:text-[#ffffff]">
                                                     {b.price_formatted}
                                                 </span>
                                                 {statusBadge(b.status)}
@@ -171,12 +171,12 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
                             ) : (
                                 <div className="relative overflow-hidden p-12 text-center space-y-3">
                                     <GridPattern className="opacity-35 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)]" />
-                                    <div className="relative z-10 w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500">
+                                    <div className="relative z-10 w-10 h-10 rounded-full bg-[#f1f3f4] dark:bg-[#202124] border border-[#dadce0] dark:border-[#3c4043] flex items-center justify-center mx-auto text-[#5f6368] dark:text-[#9aa0a6]">
                                         <Inbox className="w-5 h-5" />
                                     </div>
                                     <div className="relative z-10 space-y-1">
-                                        <h3 className="text-sm font-medium text-zinc-800 dark:text-zinc-300">No appointments recorded</h3>
-                                        <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                                        <h3 className="text-sm font-medium text-[#202124] dark:text-[#e8eaed]">No appointments recorded</h3>
+                                        <p className="text-xs text-[#5f6368] dark:text-[#9aa0a6] max-w-sm mx-auto">
                                             New customer bookings will appear here.
                                         </p>
                                     </div>
@@ -187,36 +187,36 @@ export default function Dashboard({ metrics, recent_bookings = [] }: Props) {
 
                     {/* Navigation Rail (1 col) */}
                     <div className="space-y-6">
-                        <Card className="border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/50">
-                            <CardHeader className="pb-3 border-b border-zinc-200 dark:border-zinc-800/80">
-                                <CardTitle className="text-sm font-semibold text-zinc-900 dark:text-white">Quick Navigation</CardTitle>
+                        <Card className="border-[#dadce0] dark:border-[#3c4043] bg-white dark:bg-[#303134]">
+                            <CardHeader className="pb-3 border-b border-[#dadce0] dark:border-[#3c4043]">
+                                <CardTitle className="text-sm font-semibold text-[#202124] dark:text-[#ffffff]">Quick Navigation</CardTitle>
                             </CardHeader>
                             <CardContent className="p-4 pt-3 space-y-2">
                                 <Link href="/locations" className="block">
-                                    <Button variant="outline" className="w-full justify-between text-xs border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                                    <Button variant="outline" className="w-full justify-between text-xs border-[#dadce0] dark:border-[#3c4043] hover:bg-[#f1f3f4] dark:hover:bg-[#3c4043] text-[#202124] dark:text-[#e8eaed]">
                                         <span className="flex items-center gap-2">
-                                            <MapPin className="w-3.5 h-3.5 text-zinc-500" />
-                                            Locations & Branches
+                                            <MapPin className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
+                                            Branches
                                         </span>
-                                        <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400" />
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
                                     </Button>
                                 </Link>
                                 <Link href="/users" className="block">
-                                    <Button variant="outline" className="w-full justify-between text-xs border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                                    <Button variant="outline" className="w-full justify-between text-xs border-[#dadce0] dark:border-[#3c4043] hover:bg-[#f1f3f4] dark:hover:bg-[#3c4043] text-[#202124] dark:text-[#e8eaed]">
                                         <span className="flex items-center gap-2">
-                                            <Users className="w-3.5 h-3.5 text-zinc-500" />
-                                            Staff Directory
+                                            <Users className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
+                                            Staff
                                         </span>
-                                        <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400" />
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
                                     </Button>
                                 </Link>
                                 <Link href="/roles" className="block">
-                                    <Button variant="outline" className="w-full justify-between text-xs border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                                    <Button variant="outline" className="w-full justify-between text-xs border-[#dadce0] dark:border-[#3c4043] hover:bg-[#f1f3f4] dark:hover:bg-[#3c4043] text-[#202124] dark:text-[#e8eaed]">
                                         <span className="flex items-center gap-2">
-                                            <Shield className="w-3.5 h-3.5 text-zinc-500" />
-                                            Access Control & Roles
+                                            <Shield className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
+                                            Roles & Permissions
                                         </span>
-                                        <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400" />
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
                                     </Button>
                                 </Link>
                             </CardContent>

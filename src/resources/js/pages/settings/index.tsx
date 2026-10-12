@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { UserAvatar } from '@/components/custom/UserAvatar';
-import { BlurText } from '@/components/reactbits';
 import {
     User,
     KeyRound,
@@ -61,35 +60,35 @@ export default function SettingsIndex() {
         <AppLayout title="Account Settings">
             <Head title="Account Settings" />
 
-            <div className="max-w-5xl mx-auto space-y-8">
+            <div className="w-full space-y-6">
                 {/* Header Welcome Rail */}
-                <div className="border-b border-zinc-200 dark:border-zinc-800/80 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="border-b border-[#dadce0] dark:border-[#3c4043] pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2.5">
+                        <h1 className="text-2xl font-bold tracking-tight text-[#202124] dark:text-[#ffffff] flex items-center gap-2.5">
                             <ShieldCheck className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                            <BlurText text="Account Settings" className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white" />
+                            Account Settings
                         </h1>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                        <p className="text-xs text-[#5f6368] dark:text-[#9aa0a6] mt-1">
                             Manage your administrative profile credentials, authentication tokens, and security preferences.
                         </p>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="px-2.5 py-1 font-mono text-xs border-zinc-300 dark:border-zinc-700 bg-zinc-100/60 dark:bg-zinc-800/60">
+                        <Badge variant="outline" className="px-2.5 py-1 font-mono text-xs border-[#dadce0] dark:border-[#3c4043] bg-[#f8f9fa] dark:bg-[#303134] text-[#202124] dark:text-[#e8eaed]">
                             Role: {primaryRole}
                         </Badge>
                     </div>
                 </div>
 
                 {/* Sub-Navigation Tabs */}
-                <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 border-b border-[#dadce0] dark:border-[#3c4043] pb-2">
                     <button
                         type="button"
                         onClick={() => setActiveTab('profile')}
                         className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                             activeTab === 'profile'
-                                ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
-                                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/50'
+                                ? 'bg-emerald-600 text-white dark:bg-emerald-600 dark:text-white shadow-xs'
+                                : 'text-[#5f6368] dark:text-[#9aa0a6] hover:text-[#202124] dark:hover:text-[#ffffff] hover:bg-[#f1f3f4] dark:hover:bg-[#303134]'
                         }`}
                     >
                         <User className="w-3.5 h-3.5" />
@@ -101,8 +100,8 @@ export default function SettingsIndex() {
                         onClick={() => setActiveTab('password')}
                         className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                             activeTab === 'password'
-                                ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
-                                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/50'
+                                ? 'bg-emerald-600 text-white dark:bg-emerald-600 dark:text-white shadow-xs'
+                                : 'text-[#5f6368] dark:text-[#9aa0a6] hover:text-[#202124] dark:hover:text-[#ffffff] hover:bg-[#f1f3f4] dark:hover:bg-[#303134]'
                         }`}
                     >
                         <KeyRound className="w-3.5 h-3.5" />
@@ -114,12 +113,12 @@ export default function SettingsIndex() {
                 {activeTab === 'profile' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Profile Details Form (2 cols) */}
-                        <Card className="lg:col-span-2 border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40">
-                            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
-                                <CardTitle className="text-base font-semibold text-zinc-900 dark:text-white">
+                        <Card className="lg:col-span-2 border-[#dadce0] dark:border-[#3c4043] bg-white dark:bg-[#303134]">
+                            <CardHeader className="border-b border-[#dadce0]/60 dark:border-[#3c4043]/60 pb-4">
+                                <CardTitle className="text-base font-semibold text-[#202124] dark:text-[#ffffff]">
                                     Personal Details
                                 </CardTitle>
-                                <CardDescription className="text-xs text-zinc-500 dark:text-zinc-400">
+                                <CardDescription className="text-xs text-[#5f6368] dark:text-[#9aa0a6]">
                                     Update your displayed administrator name and official notification email address.
                                 </CardDescription>
                             </CardHeader>
@@ -133,7 +132,7 @@ export default function SettingsIndex() {
                                     )}
 
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="profile-name" className="text-xs font-medium">
+                                        <Label htmlFor="profile-name" className="text-xs font-medium text-[#202124] dark:text-[#e8eaed]">
                                             Full Name
                                         </Label>
                                         <div className="relative">
@@ -145,7 +144,7 @@ export default function SettingsIndex() {
                                                 className="pl-9 text-xs"
                                                 required
                                             />
-                                            <User className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                            <User className="w-4 h-4 text-[#5f6368] dark:text-[#9aa0a6] absolute left-3 top-1/2 -translate-y-1/2" />
                                         </div>
                                         {profileForm.errors.name && (
                                             <p className="text-xs text-rose-500 flex items-center gap-1 mt-1">
@@ -156,7 +155,7 @@ export default function SettingsIndex() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="profile-email" className="text-xs font-medium">
+                                        <Label htmlFor="profile-email" className="text-xs font-medium text-[#202124] dark:text-[#e8eaed]">
                                             Email Address
                                         </Label>
                                         <div className="relative">
@@ -168,7 +167,7 @@ export default function SettingsIndex() {
                                                 className="pl-9 text-xs font-mono"
                                                 required
                                             />
-                                            <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                            <Mail className="w-4 h-4 text-[#5f6368] dark:text-[#9aa0a6] absolute left-3 top-1/2 -translate-y-1/2" />
                                         </div>
                                         {profileForm.errors.email && (
                                             <p className="text-xs text-rose-500 flex items-center gap-1 mt-1">
@@ -182,7 +181,7 @@ export default function SettingsIndex() {
                                         <Button
                                             type="submit"
                                             disabled={profileForm.processing}
-                                            className="text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white"
+                                            className="text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-xs"
                                         >
                                             {profileForm.processing ? 'Saving Changes...' : 'Save Profile Changes'}
                                         </Button>
@@ -193,9 +192,9 @@ export default function SettingsIndex() {
 
                         {/* Avatar Live Preview (1 col) */}
                         <div className="space-y-6">
-                            <Card className="border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40">
-                                <CardHeader className="border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
-                                    <CardTitle className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                            <Card className="border-[#dadce0] dark:border-[#3c4043] bg-white dark:bg-[#303134]">
+                                <CardHeader className="border-b border-[#dadce0]/60 dark:border-[#3c4043]/60 pb-3">
+                                    <CardTitle className="text-xs font-semibold uppercase tracking-wider text-[#5f6368] dark:text-[#9aa0a6]">
                                         Avatar Preview
                                     </CardTitle>
                                 </CardHeader>
@@ -204,14 +203,14 @@ export default function SettingsIndex() {
                                         <UserAvatar name={profileForm.data.name} size="lg" className="w-16 h-16 text-xl rounded-2xl" />
                                     </div>
                                     <div className="space-y-1">
-                                        <h3 className="text-sm font-semibold text-zinc-900 dark:text-white truncate">
+                                        <h3 className="text-sm font-semibold text-[#202124] dark:text-[#ffffff] truncate">
                                             {profileForm.data.name || 'Account Holder'}
                                         </h3>
-                                        <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 truncate">
+                                        <p className="text-xs font-mono text-[#5f6368] dark:text-[#9aa0a6] truncate">
                                             {profileForm.data.email || 'user@example.com'}
                                         </p>
                                     </div>
-                                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                                    <p className="text-[11px] text-[#5f6368] dark:text-[#9aa0a6]">
                                         Your avatar generates initials dynamically from your first and last name for instant identification.
                                     </p>
                                 </CardContent>
@@ -222,12 +221,12 @@ export default function SettingsIndex() {
 
                 {activeTab === 'password' && (
                     <div className="max-w-2xl">
-                        <Card className="border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40">
-                            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
-                                <CardTitle className="text-base font-semibold text-zinc-900 dark:text-white">
+                        <Card className="border-[#dadce0] dark:border-[#3c4043] bg-white dark:bg-[#303134]">
+                            <CardHeader className="border-b border-[#dadce0]/60 dark:border-[#3c4043]/60 pb-4">
+                                <CardTitle className="text-base font-semibold text-[#202124] dark:text-[#ffffff]">
                                     Update Password
                                 </CardTitle>
-                                <CardDescription className="text-xs text-zinc-500 dark:text-zinc-400">
+                                <CardDescription className="text-xs text-[#5f6368] dark:text-[#9aa0a6]">
                                     Ensure your account is using a long, random password to stay secure.
                                 </CardDescription>
                             </CardHeader>
@@ -241,7 +240,7 @@ export default function SettingsIndex() {
                                     )}
 
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="current-password" className="text-xs font-medium">
+                                        <Label htmlFor="current-password" className="text-xs font-medium text-[#202124] dark:text-[#e8eaed]">
                                             Current Password
                                         </Label>
                                         <div className="relative">
@@ -254,7 +253,7 @@ export default function SettingsIndex() {
                                                 autoComplete="current-password"
                                                 required
                                             />
-                                            <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                            <Lock className="w-4 h-4 text-[#5f6368] dark:text-[#9aa0a6] absolute left-3 top-1/2 -translate-y-1/2" />
                                         </div>
                                         {passwordForm.errors.current_password && (
                                             <p className="text-xs text-rose-500 flex items-center gap-1 mt-1">
@@ -265,7 +264,7 @@ export default function SettingsIndex() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="new-password" className="text-xs font-medium">
+                                        <Label htmlFor="new-password" className="text-xs font-medium text-[#202124] dark:text-[#e8eaed]">
                                             New Password
                                         </Label>
                                         <div className="relative">
@@ -278,7 +277,7 @@ export default function SettingsIndex() {
                                                 autoComplete="new-password"
                                                 required
                                             />
-                                            <KeyRound className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                            <KeyRound className="w-4 h-4 text-[#5f6368] dark:text-[#9aa0a6] absolute left-3 top-1/2 -translate-y-1/2" />
                                         </div>
                                         {passwordForm.errors.password && (
                                             <p className="text-xs text-rose-500 flex items-center gap-1 mt-1">
@@ -289,7 +288,7 @@ export default function SettingsIndex() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="confirm-password" className="text-xs font-medium">
+                                        <Label htmlFor="confirm-password" className="text-xs font-medium text-[#202124] dark:text-[#e8eaed]">
                                             Confirm New Password
                                         </Label>
                                         <div className="relative">
@@ -302,7 +301,7 @@ export default function SettingsIndex() {
                                                 autoComplete="new-password"
                                                 required
                                             />
-                                            <KeyRound className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                            <KeyRound className="w-4 h-4 text-[#5f6368] dark:text-[#9aa0a6] absolute left-3 top-1/2 -translate-y-1/2" />
                                         </div>
                                         {passwordForm.errors.password_confirmation && (
                                             <p className="text-xs text-rose-500 flex items-center gap-1 mt-1">
@@ -316,7 +315,7 @@ export default function SettingsIndex() {
                                         <Button
                                             type="submit"
                                             disabled={passwordForm.processing}
-                                            className="text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-white dark:hover:bg-zinc-100 dark:text-zinc-900"
+                                            className="text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-xs"
                                         >
                                             {passwordForm.processing ? 'Updating Password...' : 'Update Password'}
                                         </Button>

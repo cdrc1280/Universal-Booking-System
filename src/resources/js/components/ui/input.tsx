@@ -11,9 +11,9 @@ function Input({
       type={type}
       data-slot="input"
       className={cn(
-        "file:text-foreground placeholder:text-zinc-500 selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-sm text-zinc-100 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-zinc-500 focus-visible:ring-zinc-400/20 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        "file:text-foreground placeholder:text-[#5f6368] dark:placeholder:text-[#9aa0a6] selection:bg-emerald-500 selection:text-white flex h-9 w-full min-w-0 rounded-lg border border-[#dadce0] dark:border-[#3c4043] bg-white dark:bg-[#202124] px-3 py-1 text-xs text-[#202124] dark:text-[#ffffff] shadow-xs transition-colors outline-hidden file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-xs file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+        "focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500",
+        "aria-invalid:ring-rose-500/20 aria-invalid:border-rose-500",
         className
       )}
       {...props}

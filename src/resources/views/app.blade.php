@@ -23,7 +23,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.tsx'])
     @inertiaHead
 </head>
-<body class="font-sans antialiased bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-200 min-h-screen">
+<body class="font-sans antialiased bg-[#f8f9fa] text-[#202124] dark:bg-[#202124] dark:text-[#e8eaed] transition-colors duration-200 h-screen w-screen overflow-hidden">
     @inertia
 </body>
 </html>

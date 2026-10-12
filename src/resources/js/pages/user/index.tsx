@@ -13,19 +13,30 @@ import {
     Lock,
     Mail,
     UserCheck,
+    MoreVertical,
+    Building2,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetDescription,
-    SheetFooter,
-} from '@/components/ui/sheet';
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from '@/components/ui/dialog';
+import { DataTablePagination } from '@/components/ui/pagination';
 
 interface UserData {
     id: number;
@@ -41,6 +52,7 @@ interface UserIndexProps {
         current_page: number;
         last_page: number;
         total: number;
+        per_page?: number;
     };
     filters: {
         search?: string;
@@ -52,7 +64,7 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
     const [search, setSearch] = useState(filters.search || '');
     const [, startTransition] = useTransition();
 
-    const [sheetOpen, setSheetOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
 
     const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
@@ -67,10 +79,18 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
         startTransition(() => {
             router.get(
                 '/users',
-                { search: query || undefined },
+                { search: query || undefined, page: 1, per_page: users.per_page || 20 },
                 { preserveState: true, replace: true }
             );
         });
+    };
+
+    const handlePageChange = (page: number) => {
+        router.get(
+            '/users',
+            { search: search || undefined, page, per_page: users.per_page || 20 },
+            { preserveState: true, preserveScroll: true }
+        );
     };
 
     const openCreate = () => {
@@ -81,9 +101,9 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
             name: '',
             email: '',
             password: '',
-            roles: available_roles.length > 0 ? [available_roles[0]] : [],
+            roles: [],
         });
-        setSheetOpen(true);
+        setModalOpen(true);
     };
 
     const openEdit = (user: UserData) => {
@@ -93,13 +113,13 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
             name: user.name,
             email: user.email,
             password: '',
-            roles: [...user.roles],
+            roles: user.roles,
         });
-        setSheetOpen(true);
+        setModalOpen(true);
     };
 
-    const closeSheet = () => {
-        setSheetOpen(false);
+    const closeModal = () => {
+        setModalOpen(false);
         setEditingUser(null);
         reset();
         clearErrors();
@@ -118,50 +138,54 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
 
         if (editingUser) {
             put(`/users/${editingUser.id}`, {
-                onSuccess: () => closeSheet(),
+                onSuccess: () => closeModal(),
             });
         } else {
             post('/users', {
-                onSuccess: () => closeSheet(),
+                onSuccess: () => closeModal(),
             });
         }
     };
 
     const handleDelete = (user: UserData) => {
-        if (confirm(`Are you sure you want to delete user "${user.name}" (${user.email})? This action is irreversible.`)) {
-            router.delete(`/users/${user.id}`);
+        if (confirm(`Are you sure you want to delete user "${user.name}"? This action cannot be undone.`)) {
+            router.delete(`/users/${user.id}`, {
+                preserveScroll: true,
+            });
         }
     };
 
     return (
-        <AppLayout title="Staff Directory">
+        <AppLayout title="Staff & User Directory">
             <Head title="Staff Directory" />
 
-            <div className="space-y-6 max-w-7xl mx-auto">
-                {/* Header Banner */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
+            <div className="space-y-6 w-full">
+                {/* Header Bar */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#dadce0] dark:border-[#3c4043] pb-6">
                     <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-                            <Users className="w-5 h-5" />
+                            <Users className="w-6 h-6" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Staff & Users</h1>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                                Directory of registered system accounts, staff profiles, and security roles
+                            <h1 className="text-2xl font-bold tracking-tight text-[#202124] dark:text-[#ffffff]">
+                                Staff & User Accounts
+                            </h1>
+                            <p className="text-xs text-[#5f6368] dark:text-[#9aa0a6] mt-0.5">
+                                Directory of registered staff, providers, coordinators, and administrative profiles
                             </p>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div className="text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 rounded-lg">
-                            Total Accounts: <span className="text-zinc-900 dark:text-zinc-200 font-semibold">{users.total}</span>
+                        <div className="text-xs font-mono text-[#5f6368] dark:text-[#9aa0a6] bg-[#f1f3f4] dark:bg-[#303134] border border-[#dadce0] dark:border-[#3c4043] px-3 py-1.5 rounded-lg">
+                            Total Accounts: <span className="text-[#202124] dark:text-[#ffffff] font-semibold">{users.total}</span>
                         </div>
                         <Button
                             onClick={openCreate}
                             className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium gap-1.5 shadow-xs"
                         >
                             <Plus className="w-4 h-4" />
-                            Add User
+                            Add Staff Member
                         </Button>
                     </div>
                 </div>
@@ -169,213 +193,243 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
                 {/* Filter Toolbar */}
                 <div className="flex items-center justify-between gap-4">
                     <div className="relative flex-1 max-w-sm">
-                        <Search className="absolute left-3 top-2.5 w-4 h-4 text-zinc-400" />
+                        <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#5f6368] dark:text-[#9aa0a6]" />
                         <Input
                             type="text"
                             value={search}
                             onChange={(e) => handleSearch(e.target.value)}
                             placeholder="Filter by name or email..."
-                            className="pl-9 h-9 text-xs bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800"
+                            className="pl-9 h-9 text-xs bg-white dark:bg-[#303134] border-[#dadce0] dark:border-[#3c4043] text-[#202124] dark:text-[#e8eaed]"
                         />
                     </div>
                 </div>
 
-                {/* Data Grid Table */}
-                <div className="border border-zinc-200 dark:border-zinc-800/80 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/40 shadow-xs">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-zinc-50 dark:bg-zinc-900/70 border-b border-zinc-200 dark:border-zinc-800 text-[11px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">
-                            <tr>
-                                <th className="px-5 py-3">User</th>
-                                <th className="px-5 py-3">Assigned Roles</th>
-                                <th className="px-5 py-3">Member Since</th>
-                                <th className="px-5 py-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60 font-sans">
-                            {users.data.length === 0 ? (
+                {/* Data Grid Table with Actions in First Column & Confined Scroll Container */}
+                <div className="border border-[#dadce0] dark:border-[#3c4043] rounded-xl overflow-hidden bg-white dark:bg-[#303134] shadow-xs">
+                    <div className="overflow-x-auto max-w-full">
+                        <table className="w-full text-left text-sm">
+                            <thead className="bg-[#f8f9fa] dark:bg-[#202124] border-b border-[#dadce0] dark:border-[#3c4043] text-[11px] uppercase tracking-wider text-[#5f6368] dark:text-[#9aa0a6] font-medium">
                                 <tr>
-                                    <td colSpan={4} className="px-5 py-12 text-center text-zinc-500 dark:text-zinc-400 text-sm">
-                                        <div className="max-w-xs mx-auto space-y-2">
-                                            <Users className="w-8 h-8 text-zinc-400 mx-auto stroke-[1.5]" />
-                                            <p className="font-medium text-zinc-800 dark:text-zinc-200 text-xs">No users found</p>
-                                            <p className="text-[11px] text-zinc-500">Try adjusting your filter search or create a new user account.</p>
-                                        </div>
-                                    </td>
+                                    {/* Actions always as first column */}
+                                    <th className="px-4 py-3 w-16 text-center">Actions</th>
+                                    <th className="px-5 py-3">Staff Member</th>
+                                    <th className="px-5 py-3">Assigned Roles</th>
+                                    <th className="px-5 py-3">Member Since</th>
                                 </tr>
-                            ) : (
-                                users.data.map((user) => (
-                                    <tr key={user.id} className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors">
-                                        <td className="px-5 py-3.5">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 flex items-center justify-center text-zinc-600 dark:text-zinc-400 text-xs font-semibold">
-                                                    <UserIcon className="w-4 h-4" />
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium text-zinc-900 dark:text-zinc-200 text-xs sm:text-sm">{user.name}</div>
-                                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">{user.email}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-5 py-3.5">
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {user.roles.length === 0 ? (
-                                                    <span className="text-xs text-zinc-400 dark:text-zinc-500 italic">No roles</span>
-                                                ) : (
-                                                    user.roles.map((role) => (
-                                                        <Badge
-                                                            key={role}
-                                                            variant="secondary"
-                                                            className="text-[11px] gap-1 font-normal bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-800/40"
-                                                        >
-                                                            <Shield className="w-3 h-3" />
-                                                            {role}
-                                                        </Badge>
-                                                    ))
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className="px-5 py-3.5 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
-                                            {user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}
-                                        </td>
-                                        <td className="px-5 py-3.5 text-right">
-                                            <div className="flex items-center justify-end gap-1.5">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => openEdit(user)}
-                                                    className="h-8 w-8 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-                                                    title="Edit account"
-                                                >
-                                                    <Edit2 className="w-3.5 h-3.5" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => handleDelete(user)}
-                                                    className="h-8 w-8 text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400"
-                                                    title="Delete account"
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </Button>
+                            </thead>
+                            <tbody className="divide-y divide-[#dadce0] dark:divide-[#3c4043] font-sans">
+                                {users.data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={4} className="px-5 py-12 text-center text-[#5f6368] dark:text-[#9aa0a6] text-sm">
+                                            <div className="max-w-xs mx-auto space-y-2">
+                                                <Users className="w-8 h-8 text-[#5f6368] dark:text-[#9aa0a6] mx-auto stroke-[1.5]" />
+                                                <p className="font-medium text-[#202124] dark:text-[#e8eaed] text-xs">No users found</p>
+                                                <p className="text-[11px] text-[#5f6368] dark:text-[#9aa0a6]">Try adjusting your filter search or create a new user account.</p>
                                             </div>
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                ) : (
+                                    users.data.map((user) => (
+                                        <tr key={user.id} className="hover:bg-[#f1f3f4] dark:hover:bg-[#3c4043]/40 transition-colors">
+                                            {/* Column 1: Kebab Actions Dropdown */}
+                                            <td className="px-4 py-3.5 text-center">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 text-[#5f6368] hover:text-[#202124] dark:text-[#9aa0a6] dark:hover:text-[#ffffff] rounded-lg"
+                                                            title="Staff Actions"
+                                                        >
+                                                            <MoreVertical className="w-4 h-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="start" className="w-44">
+                                                        <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider text-[#5f6368] dark:text-[#9aa0a6]">
+                                                            Staff Actions
+                                                        </DropdownMenuLabel>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => openEdit(user)}
+                                                            className="gap-2 cursor-pointer text-xs"
+                                                        >
+                                                            <Edit2 className="w-3.5 h-3.5 text-[#5f6368] dark:text-[#9aa0a6]" />
+                                                            <span>Edit Account</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleDelete(user)}
+                                                            className="gap-2 cursor-pointer text-xs text-rose-600 dark:text-rose-400 focus:text-rose-600 dark:focus:text-rose-400"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                                                            <span>Delete Account</span>
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </td>
+
+                                            {/* Column 2: User Identity */}
+                                            <td className="px-5 py-3.5">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-full bg-[#f1f3f4] dark:bg-[#202124] border border-[#dadce0] dark:border-[#3c4043] flex items-center justify-center text-[#5f6368] dark:text-[#9aa0a6] text-xs font-semibold">
+                                                        <UserIcon className="w-4 h-4" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-medium text-[#202124] dark:text-[#ffffff] text-xs sm:text-sm">{user.name}</div>
+                                                        <div className="text-xs text-[#5f6368] dark:text-[#9aa0a6]">{user.email}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            {/* Column 3: Roles */}
+                                            <td className="px-5 py-3.5">
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {user.roles.length === 0 ? (
+                                                        <span className="text-xs text-[#5f6368] dark:text-[#9aa0a6] italic">No roles</span>
+                                                    ) : (
+                                                        user.roles.map((role) => (
+                                                            <Badge
+                                                                key={role}
+                                                                variant="secondary"
+                                                                className="text-[11px] gap-1 font-normal bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-800/40"
+                                                            >
+                                                                <Shield className="w-3 h-3" />
+                                                                {role}
+                                                            </Badge>
+                                                        ))
+                                                    )}
+                                                </div>
+                                            </td>
+
+                                            {/* Column 4: Creation Date */}
+                                            <td className="px-5 py-3.5 text-xs text-[#5f6368] dark:text-[#9aa0a6] font-mono">
+                                                {user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Standardized 20-per-page Pagination */}
+                    <DataTablePagination
+                        currentPage={users.current_page}
+                        lastPage={users.last_page}
+                        total={users.total}
+                        perPage={users.per_page || 20}
+                        onPageChange={handlePageChange}
+                    />
                 </div>
 
-                {/* shadcn Sheet Slide-Over Form */}
-                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                    <SheetContent side="right" className="sm:max-w-lg flex flex-col justify-between">
-                        <div>
-                            <SheetHeader>
-                                <div className="flex items-center gap-2.5">
-                                    <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-                                        <UserCheck className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <SheetTitle>
-                                            {editingUser ? 'Edit User Account' : 'Create User Account'}
-                                        </SheetTitle>
-                                        <SheetDescription>
-                                            {editingUser
-                                                ? 'Update user credentials and permission boundaries'
-                                                : 'Register a new team member or system administrator'}
-                                        </SheetDescription>
-                                    </div>
+                {/* Pop-up Modal */}
+                <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                    <DialogContent className="sm:max-w-lg">
+                        <DialogHeader>
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                                    <UserCheck className="w-5 h-5" />
                                 </div>
-                            </SheetHeader>
-
-                            <form id="user-form" onSubmit={handleSubmit} className="space-y-5 py-6">
-                                <div className="space-y-1.5">
-                                    <Label htmlFor="name" className="text-xs font-medium">Full Name</Label>
-                                    <Input
-                                        id="name"
-                                        type="text"
-                                        value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Alex Johnson"
-                                        className="text-xs h-9"
-                                        required
-                                    />
-                                    {errors.name && <p className="text-[11px] text-rose-500">{errors.name}</p>}
+                                <div>
+                                    <DialogTitle>
+                                        {editingUser ? 'Edit Staff Account' : 'Register New Staff Member'}
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                        {editingUser
+                                            ? 'Update staff credentials and assigned role boundaries'
+                                            : 'Add a new clinic staff member, service provider, or administrator'}
+                                    </DialogDescription>
                                 </div>
+                            </div>
+                        </DialogHeader>
 
-                                <div className="space-y-1.5">
-                                    <Label htmlFor="email" className="text-xs font-medium">Email Address</Label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-2.5 w-4 h-4 text-zinc-400" />
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            value={data.email}
-                                            onChange={(e) => setData('email', e.target.value)}
-                                            placeholder="alex@example.com"
-                                            className="text-xs h-9 pl-9"
-                                            required
-                                        />
-                                    </div>
-                                    {errors.email && <p className="text-[11px] text-rose-500">{errors.email}</p>}
+                        <form id="user-form" onSubmit={handleSubmit} className="space-y-4 py-2">
+                            <div className="space-y-1.5">
+                                <Label htmlFor="name" className="text-xs font-medium">Full Name *</Label>
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    placeholder="Dr. Alex Johnson / Maria Santos"
+                                    className="text-xs h-9 bg-white dark:bg-[#202124] border-[#dadce0] dark:border-[#3c4043]"
+                                    required
+                                />
+                                {errors.name && <p className="text-[11px] text-rose-500">{errors.name}</p>}
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label htmlFor="email" className="text-xs font-medium">Work Email Address *</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    placeholder="staff@universalbooking.ph"
+                                    className="text-xs h-9 bg-white dark:bg-[#202124] border-[#dadce0] dark:border-[#3c4043]"
+                                    required
+                                />
+                                {errors.email && <p className="text-[11px] text-rose-500">{errors.email}</p>}
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label htmlFor="password" className="text-xs font-medium">
+                                    {editingUser ? 'Password (leave blank to retain current)' : 'Account Password *'}
+                                </Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    value={data.password}
+                                    onChange={(e) => setData('password', e.target.value)}
+                                    placeholder={editingUser ? '••••••••••••' : 'Min 8 characters'}
+                                    className="text-xs h-9 bg-white dark:bg-[#202124] border-[#dadce0] dark:border-[#3c4043]"
+                                    required={!editingUser}
+                                />
+                                {errors.password && <p className="text-[11px] text-rose-500">{errors.password}</p>}
+                            </div>
+
+                            <div className="space-y-2 pt-2 border-t border-[#dadce0]/60 dark:border-[#3c4043]/60">
+                                <div className="flex items-center justify-between">
+                                    <Label className="text-xs font-medium">Assigned System Roles</Label>
+                                    <span className="text-[11px] text-[#5f6368] dark:text-[#9aa0a6]">
+                                        {data.roles.length} selected
+                                    </span>
                                 </div>
-
-                                <div className="space-y-1.5">
-                                    <Label htmlFor="password" className="text-xs font-medium">
-                                        {editingUser ? 'Password (Optional)' : 'Password'}
-                                    </Label>
-                                    <div className="relative">
-                                        <Lock className="absolute left-3 top-2.5 w-4 h-4 text-zinc-400" />
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            value={data.password}
-                                            onChange={(e) => setData('password', e.target.value)}
-                                            placeholder={editingUser ? 'Leave blank to preserve current password' : 'At least 8 characters'}
-                                            className="text-xs h-9 pl-9"
-                                            required={!editingUser}
-                                        />
-                                    </div>
-                                    {errors.password && <p className="text-[11px] text-rose-500">{errors.password}</p>}
-                                </div>
-
-                                <div className="space-y-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                                    <Label className="text-xs font-medium">Assigned Roles</Label>
-                                    <div className="flex flex-wrap gap-2">
-                                        {available_roles.map((role) => {
-                                            const isSelected = data.roles.includes(role);
+                                <div className="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto p-1 border border-[#dadce0] dark:border-[#3c4043] rounded-lg bg-[#f8f9fa] dark:bg-[#202124]/50">
+                                    {available_roles.length === 0 ? (
+                                        <p className="text-xs text-[#5f6368] dark:text-[#9aa0a6] p-2 col-span-2 italic text-center">
+                                            No roles configured in system.
+                                        </p>
+                                    ) : (
+                                        available_roles.map((role) => {
+                                            const isChecked = data.roles.includes(role);
                                             return (
                                                 <button
                                                     key={role}
                                                     type="button"
                                                     onClick={() => toggleRole(role)}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all border ${
-                                                        isSelected
-                                                            ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30'
-                                                            : 'bg-zinc-100 dark:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700/60 hover:border-zinc-300 dark:hover:border-zinc-600'
+                                                    className={`flex items-center justify-between p-2 rounded text-xs transition-colors text-left ${
+                                                        isChecked
+                                                            ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30'
+                                                            : 'hover:bg-[#f1f3f4] dark:hover:bg-[#303134] text-[#202124] dark:text-[#ffffff]'
                                                     }`}
                                                 >
-                                                    {isSelected ? (
-                                                        <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                                                    ) : (
-                                                        <Shield className="w-3.5 h-3.5 text-zinc-400" />
-                                                    )}
-                                                    <span className="capitalize">{role}</span>
+                                                    <span className="capitalize font-medium truncate">{role}</span>
+                                                    {isChecked && <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />}
                                                 </button>
                                             );
-                                        })}
-                                    </div>
-                                    {errors.roles && <p className="text-[11px] text-rose-500">{errors.roles}</p>}
+                                        })
+                                    )}
                                 </div>
-                            </form>
-                        </div>
+                                {errors.roles && <p className="text-[11px] text-rose-500">{errors.roles}</p>}
+                            </div>
+                        </form>
 
-                        <SheetFooter>
+                        <DialogFooter className="gap-2 sm:gap-0 pt-2">
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={closeSheet}
-                                className="text-xs h-9"
+                                onClick={closeModal}
+                                className="text-xs h-9 border-[#dadce0] dark:border-[#3c4043]"
                             >
                                 Cancel
                             </Button>
@@ -385,11 +439,11 @@ export default function UserIndex({ users, filters, available_roles = [] }: User
                                 disabled={processing}
                                 className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 shadow-xs"
                             >
-                                {processing ? 'Saving...' : editingUser ? 'Update User' : 'Create User'}
+                                {processing ? 'Saving...' : editingUser ? 'Update Staff Member' : 'Register Staff Member'}
                             </Button>
-                        </SheetFooter>
-                    </SheetContent>
-                </Sheet>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </AppLayout>
     );
