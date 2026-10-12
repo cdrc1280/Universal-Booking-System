@@ -12,6 +12,7 @@ import {
 import { useSidebar, SidebarProvider } from '@/context/SidebarContext';
 import { useTheme, ThemeProvider } from '@/context/ThemeContext';
 import { ThemeToggle } from '@/components/custom/ThemeToggle';
+import { UserMenuDropdown } from '@/components/custom/UserMenuDropdown';
 import { Button } from '@/components/ui/button';
 import { ShinyText, Magnetic } from '@/components/reactbits';
 
@@ -147,28 +148,15 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                         </nav>
                     </div>
 
-                    {/* Authenticated User Status */}
-                    <div className="p-3 border-t border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/60">
-                        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+                    {/* Clean Sidebar Footer */}
+                    <div className="p-3 border-t border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/30">
+                        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'px-2'} gap-2 text-zinc-400 dark:text-zinc-500`}>
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                             {!isCollapsed && (
-                                <div className="min-w-0 pr-2">
-                                    <span className="text-xs font-medium text-zinc-900 dark:text-white block truncate">
-                                        {user?.name ?? 'Admin'}
-                                    </span>
-                                    <span className="text-[11px] text-zinc-500 dark:text-zinc-400 block truncate">
-                                        {user?.email ?? 'admin@example.com'}
-                                    </span>
-                                </div>
+                                <span className="text-[11px] font-mono tracking-tight text-zinc-500 dark:text-zinc-400 truncate">
+                                    Slotwise Core
+                                </span>
                             )}
-                            <Link
-                                href="/logout"
-                                method="post"
-                                as="button"
-                                className="p-1.5 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
-                                title="Sign out"
-                            >
-                                <LogOut className="w-4 h-4 shrink-0" />
-                            </Link>
                         </div>
                     </div>
                 </aside>
@@ -187,6 +175,7 @@ function AppLayoutContent({ children, title }: AppLayoutProps) {
                             <Magnetic intensity={0.25}>
                                 <ThemeToggle />
                             </Magnetic>
+                            <UserMenuDropdown />
                         </div>
                     </header>
 

@@ -35,6 +35,11 @@ Route::middleware(['auth'])->group(function () {
         ]);
     })->name('dashboard');
 
+    // Account Settings
+    Route::get('/settings', function () {
+        return Inertia::render('settings/index');
+    })->name('settings');
+
     // Fully implemented active domain modules
     Route::resource('locations', LocationController::class)->except(['create', 'show', 'edit']);
     Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
