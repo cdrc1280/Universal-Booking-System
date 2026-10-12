@@ -8,17 +8,18 @@ export function ThemeToggle() {
 
     return (
         <Button
+            type="button"
             variant="outline"
             size="icon"
             onClick={toggleTheme}
-            className="h-8 w-8 rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            className="h-8 w-8 rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer shrink-0 shadow-xs"
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             aria-label="Toggle visual theme"
         >
             {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-amber-400 transition-transform duration-200 rotate-0 scale-100" />
+                <Sun className="w-4 h-4 text-amber-500 transition-transform duration-200" />
             ) : (
-                <Moon className="w-4 h-4 text-zinc-700 transition-transform duration-200 rotate-0 scale-100" />
+                <Moon className="w-4 h-4 text-zinc-700 dark:text-zinc-300 transition-transform duration-200" />
             )}
         </Button>
     );
