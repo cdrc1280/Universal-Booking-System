@@ -37,6 +37,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Fully implemented active domain modules
     Route::resource('locations', LocationController::class)->except(['create', 'show', 'edit']);
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
+    Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
 });
