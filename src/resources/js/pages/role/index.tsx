@@ -1,6 +1,9 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
+import AppLayout from '@/layouts/app/AppLayout';
 import { Shield, Key } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface PermissionItem {
     id: number;
@@ -22,61 +25,73 @@ interface Props {
 
 export default function RoleIndex({ roles, permissions }: Props) {
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 p-8">
-            <Head title="Roles & Permissions" />
+        <AppLayout title="Access Control">
+            <Head title="Access Control — Slotwise" />
 
-            <div className="max-w-6xl mx-auto space-y-8">
-                <header className="flex items-center justify-between border-b border-zinc-800 pb-5">
-                    <div>
-                        <h1 className="text-2xl font-semibold tracking-tight text-white flex items-center gap-2">
-                            <Shield className="w-6 h-6 text-emerald-400" />
-                            Access Control & Roles
-                        </h1>
-                        <p className="text-sm text-zinc-400 mt-1">
-                            Manage security roles and assign granular permissions.
-                        </p>
-                    </div>
-                </header>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {roles.map((role) => (
-                        <div
-                            key={role.id}
-                            className="p-5 rounded-xl border border-zinc-800/80 bg-zinc-900/50 backdrop-blur-sm space-y-4 hover:border-zinc-700 transition-colors"
-                        >
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Key className="w-4 h-4 text-zinc-400" />
-                                    <h2 className="font-medium text-white capitalize">{role.name}</h2>
-                                </div>
-                                <span className="text-xs font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/50">
-                                    {role.guard_name}
-                                </span>
-                            </div>
-
-                            <div className="space-y-2">
-                                <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-                                    Granted Permissions
-                                </h3>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {role.permissions && role.permissions.length > 0 ? (
-                                        role.permissions.map((perm) => (
-                                            <span
-                                                key={perm.id}
-                                                className="text-xs px-2 py-0.5 rounded-md bg-emerald-950/60 text-emerald-300 border border-emerald-800/40"
-                                            >
-                                                {perm.name}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <span className="text-xs text-zinc-600 italic">No explicit permissions</span>
-                                    )}
-                                </div>
-                            </div>
+            <div className="space-y-8 max-w-7xl mx-auto">
+                {/* Header Banner */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                            <Shield className="w-5 h-5" />
                         </div>
+                        <div>
+                            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Access Control & Roles</h1>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                                Granular permissions and authorization levels for staff and administrators
+                            </p>
+                        </div>
+                    </div>
+                    <div className="text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 rounded-lg">
+                        Defined Roles: <span className="text-zinc-900 dark:text-zinc-200 font-semibold">{roles.length}</span>
+                    </div>
+                </div>
+
+                {/* Role Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {roles.map((role) => (
+                        <Card
+                            key={role.id}
+                            className="border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/50 hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-colors"
+                        >
+                            <CardContent className="p-5 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
+                                            <Key className="w-3.5 h-3.5" />
+                                        </div>
+                                        <h2 className="font-semibold text-zinc-900 dark:text-white capitalize text-sm">{role.name}</h2>
+                                    </div>
+                                    <Badge variant="outline" className="text-[10px] font-mono px-2 py-0.5 text-zinc-500 dark:text-zinc-400">
+                                        {role.guard_name}
+                                    </Badge>
+                                </div>
+
+                                <div className="space-y-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/60">
+                                    <h3 className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                                        Granted Permissions
+                                    </h3>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {role.permissions && role.permissions.length > 0 ? (
+                                            role.permissions.map((perm) => (
+                                                <Badge
+                                                    key={perm.id}
+                                                    variant="secondary"
+                                                    className="text-[11px] font-normal bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40"
+                                                >
+                                                    {perm.name}
+                                                </Badge>
+                                            ))
+                                        ) : (
+                                            <span className="text-xs text-zinc-400 italic">No explicit permissions</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             </div>
-        </div>
+        </AppLayout>
     );
 }

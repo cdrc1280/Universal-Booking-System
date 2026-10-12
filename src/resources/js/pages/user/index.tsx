@@ -1,6 +1,9 @@
+import React, { useState, useTransition } from 'react';
 import { Head, router } from '@inertiajs/react';
+import AppLayout from '@/layouts/app/AppLayout';
 import { Search, Users, Shield, User as UserIcon } from 'lucide-react';
-import { useState, useTransition } from 'react';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 interface UserData {
     id: number;
@@ -38,22 +41,23 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
     };
 
     return (
-        <>
-            <Head title="User Management" />
-            <div className="min-h-screen bg-zinc-950 text-zinc-100 p-8 space-y-6">
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-800 pb-5">
+        <AppLayout title="Staff Directory">
+            <Head title="Staff Directory — Slotwise" />
+
+            <div className="space-y-6 max-w-7xl mx-auto">
+                {/* Header Banner */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
                     <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                        <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                             <Users className="w-5 h-5" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-semibold text-zinc-100">Users</h1>
-                            <p className="text-xs text-zinc-400">Directory of registered system accounts and assigned roles</p>
+                            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Staff & Users</h1>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Directory of registered system accounts and security roles</p>
                         </div>
                     </div>
-                    <div className="text-xs font-mono text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-md">
-                        Total Users: <span className="text-zinc-200 font-semibold">{users.total}</span>
+                    <div className="text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 rounded-lg">
+                        Total Users: <span className="text-zinc-900 dark:text-zinc-200 font-semibold">{users.total}</span>
                     </div>
                 </div>
 
@@ -61,27 +65,27 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
                 <div className="flex items-center gap-3">
                     <div className="relative flex-1 max-w-sm">
                         <Search className="absolute left-3 top-2.5 w-4 h-4 text-zinc-400" />
-                        <input
+                        <Input
                             type="text"
                             value={search}
                             onChange={(e) => handleSearch(e.target.value)}
                             placeholder="Filter by name or email..."
-                            className="w-full pl-9 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                            className="pl-9 h-9 text-xs bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800"
                         />
                     </div>
                 </div>
 
                 {/* Data Grid */}
-                <div className="border border-zinc-800 rounded-xl overflow-hidden bg-zinc-900/30">
+                <div className="border border-zinc-200 dark:border-zinc-800/80 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/40 shadow-xs">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-zinc-900/70 border-b border-zinc-800 text-xs uppercase tracking-wider text-zinc-400 font-medium">
+                        <thead className="bg-zinc-50 dark:bg-zinc-900/70 border-b border-zinc-200 dark:border-zinc-800 text-[11px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">
                             <tr>
                                 <th className="px-5 py-3">User</th>
-                                <th className="px-5 py-3">Roles</th>
-                                <th className="px-5 py-3">Created</th>
+                                <th className="px-5 py-3">Assigned Roles</th>
+                                <th className="px-5 py-3">Member Since</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-800/60 font-sans">
+                        <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60 font-sans">
                             {users.data.length === 0 ? (
                                 <tr>
                                     <td colSpan={3} className="px-5 py-8 text-center text-zinc-500 text-sm">
@@ -90,36 +94,37 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
                                 </tr>
                             ) : (
                                 users.data.map((user) => (
-                                    <tr key={user.id} className="hover:bg-zinc-900/40 transition-colors">
+                                    <tr key={user.id} className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors">
                                         <td className="px-5 py-3.5">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs font-semibold">
+                                                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 flex items-center justify-center text-zinc-600 dark:text-zinc-400 text-xs font-semibold">
                                                     <UserIcon className="w-4 h-4" />
                                                 </div>
                                                 <div>
-                                                    <div className="font-medium text-zinc-200">{user.name}</div>
-                                                    <div className="text-xs text-zinc-400">{user.email}</div>
+                                                    <div className="font-medium text-zinc-900 dark:text-zinc-200 text-xs sm:text-sm">{user.name}</div>
+                                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">{user.email}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-5 py-3.5">
                                             <div className="flex flex-wrap gap-1.5">
                                                 {user.roles.length === 0 ? (
-                                                    <span className="text-xs text-zinc-500 italic">No roles</span>
+                                                    <span className="text-xs text-zinc-400 dark:text-zinc-500 italic">No roles</span>
                                                 ) : (
                                                     user.roles.map((role) => (
-                                                        <span
+                                                        <Badge
                                                             key={role}
-                                                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                                                            variant="secondary"
+                                                            className="text-[11px] gap-1 font-normal bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-800/40"
                                                         >
                                                             <Shield className="w-3 h-3" />
                                                             {role}
-                                                        </span>
+                                                        </Badge>
                                                     ))
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-5 py-3.5 text-xs text-zinc-400 font-mono">
+                                        <td className="px-5 py-3.5 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
                                             {user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}
                                         </td>
                                     </tr>
@@ -129,6 +134,6 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
                     </table>
                 </div>
             </div>
-        </>
+        </AppLayout>
     );
 }

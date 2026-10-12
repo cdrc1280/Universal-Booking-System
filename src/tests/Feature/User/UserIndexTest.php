@@ -6,9 +6,10 @@ use App\Domains\User\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('it renders the users index page with inertia', function () {
-    User::factory()->count(5)->create();
+    $operator = User::factory()->create();
+    User::factory()->count(4)->create();
 
-    $response = $this->get(route('users.index'));
+    $response = $this->actingAs($operator)->get(route('users.index'));
 
     $response->assertOk()
         ->assertInertia(fn (Assert $page) => $page
@@ -19,10 +20,11 @@ test('it renders the users index page with inertia', function () {
 });
 
 test('it filters users by search query', function () {
+    $operator = User::factory()->create();
     User::factory()->create(['name' => 'Alice Johnson', 'email' => 'alice@test.com']);
     User::factory()->create(['name' => 'Bob Smith', 'email' => 'bob@test.com']);
 
-    $response = $this->get(route('users.index', ['search' => 'Alice']));
+    $response = $this->actingAs($operator)->get(route('users.index', ['search' => 'Alice']));
 
     $response->assertOk()
         ->assertInertia(fn (Assert $page) => $page
